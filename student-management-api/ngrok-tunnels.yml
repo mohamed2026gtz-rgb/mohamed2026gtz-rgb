@@ -1,0 +1,8 @@
+version: "2"
+tunnels:
+  api:
+    addr: 5103
+    proto: http
+  admin:
+    addr: 5173
+    proto: http

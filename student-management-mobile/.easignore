@@ -1,0 +1,7 @@
+# Files excluded from EAS Build upload (smaller, faster builds).
+android/app/build
+android/.gradle
+**/.cxx
+.git
+*.apk
+*.aab

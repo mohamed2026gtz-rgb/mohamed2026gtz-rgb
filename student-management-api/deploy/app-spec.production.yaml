@@ -1,0 +1,74 @@
+name: student-mgmt-production
+region: nyc
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+
+domains:
+  - domain: portal.slnecb.org
+    type: PRIMARY
+    zone: slnecb.org
+  - domain: admin.slnecb.org
+    type: ALIAS
+    zone: slnecb.org
+
+services:
+  - name: api
+    dockerfile_path: student-management-api/Dockerfile
+    source_dir: student-management-api
+    github:
+      repo: YOUR_ORG/student-management
+      branch: main
+      deploy_on_push: false
+    instance_count: 2
+    instance_size_slug: basic-xs
+    http_port: 5103
+    health_check:
+      http_path: /health/ready
+      initial_delay_seconds: 30
+      period_seconds: 20
+      timeout_seconds: 5
+      failure_threshold: 3
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "5103"
+      - key: DB_NAME
+        value: Sneo_final
+      - key: JWT_ISSUER
+        value: StudentManagementAPI
+      - key: JWT_AUDIENCE
+        value: StudentManagementApp
+      - key: API_PUBLIC_URL
+        value: https://portal.slnecb.org
+      - key: CORS_ORIGIN
+        value: https://admin.slnecb.org
+      - key: DB_HOST
+        scope: RUN_TIME
+        type: SECRET
+      - key: DB_PASSWORD
+        scope: RUN_TIME
+        type: SECRET
+      - key: JWT_SECRET
+        scope: RUN_TIME
+        type: SECRET
+
+static_sites:
+  - name: admin
+    build_command: cd student-management-admin && npm ci && npm run build
+    output_dir: student-management-admin/dist
+    github:
+      repo: YOUR_ORG/student-management
+      branch: main
+      deploy_on_push: false
+    envs:
+      - key: VITE_API_BASE_URL
+        value: https://portal.slnecb.org
+
+databases:
+  - name: sneo-mysql
+    engine: MYSQL
+    version: "8"
+    production: true
+    cluster_name: student-mgmt-prod-mysql

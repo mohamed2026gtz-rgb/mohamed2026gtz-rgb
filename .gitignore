@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+!**/.env.example
+!**/.env.*.example
+
+# Build outputs
+dist/
+build/
+.expo/
+web-build/
+student-management-mobile/android/
+student-management-mobile/ios/
+student-management-mobile/releases/
+
+# Logs & debug
+*.log
+build-log.txt
+ngrok.log
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sw?
+
+# Mobile / release binaries (build in CI or locally)
+*.apk
+*.aab
+*.ipa
+
+# Test screenshots & local artifacts
+emulator-*.png
+tools/ngrok.exe
+tools/ngrok.zip
+
+# Terraform local state (if used later)
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+!*.tfvars.example
+
+# Cursor / local tooling
+.cursor/

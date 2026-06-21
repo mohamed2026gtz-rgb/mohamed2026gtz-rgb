@@ -1,0 +1,126 @@
+# Render Blueprint — Student Management System
+# Apply: Render Dashboard -> New -> Blueprint -> connect repo
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: sneo-api-production
+    runtime: docker
+    region: frankfurt
+    plan: starter
+    branch: main
+    autoDeploy: false
+    dockerfilePath: ./student-management-api/Dockerfile
+    dockerContext: ./student-management-api
+    healthCheckPath: /health/ready
+    domains:
+      - portal.slnecb.org
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_ISSUER
+        value: StudentManagementAPI
+      - key: JWT_AUDIENCE
+        value: StudentManagementApp
+      - key: JWT_EXPIRE_MINUTES
+        value: "60"
+      - key: API_PUBLIC_URL
+        value: https://portal.slnecb.org
+      - key: CORS_ORIGIN
+        value: https://admin.slnecb.org,https://portal.slnecb.org
+      - key: RATE_LIMIT_MAX
+        value: "500"
+      - key: AUTH_RATE_LIMIT_MAX
+        value: "20"
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: IMAGE_SHARE_HOST
+        sync: false
+      - key: IMAGE_SHARE_ROOT
+        sync: false
+
+  - type: web
+    name: sneo-api-staging
+    runtime: docker
+    region: frankfurt
+    plan: starter
+    branch: develop
+    autoDeploy: false
+    dockerfilePath: ./student-management-api/Dockerfile
+    dockerContext: ./student-management-api
+    healthCheckPath: /health/ready
+    domains:
+      - staging-api.slnecb.org
+    envVars:
+      - key: NODE_ENV
+        value: staging
+      - key: JWT_ISSUER
+        value: StudentManagementAPI-Staging
+      - key: JWT_AUDIENCE
+        value: StudentManagementApp-Staging
+      - key: API_PUBLIC_URL
+        value: https://staging-api.slnecb.org
+      - key: CORS_ORIGIN
+        value: https://staging-admin.slnecb.org
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
+    name: sneo-admin-production
+    runtime: static
+    region: frankfurt
+    plan: starter
+    branch: main
+    autoDeploy: false
+    buildCommand: cd student-management-admin && npm ci && npm run build
+    staticPublishPath: student-management-admin/dist
+    pullRequestPreviewsEnabled: false
+    domains:
+      - admin.slnecb.org
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://portal.slnecb.org
+
+  - type: web
+    name: sneo-admin-staging
+    runtime: static
+    region: frankfurt
+    plan: starter
+    branch: develop
+    autoDeploy: false
+    buildCommand: cd student-management-admin && npm ci && npm run build
+    staticPublishPath: student-management-admin/dist
+    pullRequestPreviewsEnabled: true
+    domains:
+      - staging-admin.slnecb.org
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://staging-api.slnecb.org

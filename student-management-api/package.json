@@ -1,0 +1,39 @@
+{
+  "name": "student-management-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "ngrok": "powershell -ExecutionPolicy Bypass -File ./run-ngrok.ps1",
+    "migrate:supervisors": "node scripts/migrate-supervisors.js",
+    "migrate:attendance": "node scripts/migrate-attendance.js",
+    "migrate:supervisor-one-to-one": "node scripts/migrate-supervisor-one-to-one.js",
+    "migrate:all": "node scripts/migrate-all.js",
+    "test:supervisors": "node scripts/test-supervisors.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "^4.22.0",
+    "@vladmandic/face-api": "^1.7.15",
+    "adm-zip": "^0.5.17",
+    "bcryptjs": "^3.0.3",
+    "canvas": "^3.1.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.1",
+    "mysql2": "^3.22.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
